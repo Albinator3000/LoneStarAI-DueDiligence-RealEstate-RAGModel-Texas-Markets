@@ -103,7 +103,7 @@ def process_property_data(datasets):
     combined_df = pd.concat(all_data, ignore_index=True, sort=False)
 
     # Clean and standardize column names
-    combined_df.columns = combined_df.columns.str.strip().str.lower().str.replace(' ', '_')
+    combined_df.columns = [str(col).strip().lower().replace(' ', '_') for col in combined_df.columns]
 
     print(f"\n📊 Combined dataset: {combined_df.shape[0]} properties, {combined_df.shape[1]} columns")
 
@@ -120,61 +120,70 @@ def create_property_knowledge_base(df, max_properties=200):
     Returns:
         str: Formatted text representation of properties
     """
-    # Filter to records with dates
-    if 'document_date' in df.columns:
-        df_filtered = df[df['document_date'].notna()]
-    else:
-        df_filtered = df
+    try:
+        # Filter to records with dates
+        if 'document_date' in df.columns:
+            df_filtered = df[df['document_date'].notna()].copy()
+        else:
+            df_filtered = df.copy()
 
-    # Sample if too many
-    if len(df_filtered) > max_properties:
-        df_sample = df_filtered.sample(n=max_properties, random_state=42)
-    else:
-        df_sample = df_filtered
+        # Sample if too many
+        if len(df_filtered) > max_properties:
+            df_sample = df_filtered.sample(n=max_properties, random_state=42)
+        else:
+            df_sample = df_filtered
 
-    property_texts = []
+        property_texts = []
+        available_cols = set(df_sample.columns)
 
-    for idx, row in df_sample.iterrows():
-        property_text = f"\n{'='*80}\nPROPERTY RECORD #{idx}\n"
+        for idx, row in df_sample.iterrows():
+            property_text = f"\n{'='*80}\nPROPERTY RECORD #{idx}\n"
 
-        if 'data_source' in row.index and pd.notna(row['data_source']):
-            property_text += f"Data Source: {row['data_source']}\n"
+            if 'data_source' in available_cols and pd.notna(row.get('data_source')):
+                property_text += f"Data Source: {row['data_source']}\n"
 
-        property_text += f"{'-'*80}\n"
+            property_text += f"{'-'*80}\n"
 
-        # Transaction Info
-        property_text += "\nTRANSACTION INFORMATION:\n"
-        if 'document_date' in row.index and pd.notna(row['document_date']):
-            property_text += f"  Sale Date: {row['document_date']}\n"
+            # Transaction Info
+            property_text += "\nTRANSACTION INFORMATION:\n"
+            if 'document_date' in available_cols and pd.notna(row.get('document_date')):
+                property_text += f"  Sale Date: {row['document_date']}\n"
 
-        # Property Details
-        property_text += "\nPROPERTY DETAILS:\n"
-        for col in ['site_class', 'site_name', 'address', 'neighborhood', 'property_type']:
-            if col in row.index and pd.notna(row[col]):
-                property_text += f"  {col.replace('_', ' ').title()}: {row[col]}\n"
-
-        # Financial Info
-        property_text += "\nFINANCIAL INFORMATION:\n"
-        for col in row.index:
-            if 'price' in col.lower() or 'amount' in col.lower():
-                if pd.notna(row[col]) and isinstance(row[col], (int, float)):
-                    property_text += f"  {col.replace('_', ' ').title()}: ${row[col]:,.2f}\n"
-
-        # Size Info
-        property_text += "\nSIZE INFORMATION:\n"
-        for col in row.index:
-            if any(x in col.lower() for x in ['acre', 'size', 'sqft', 'square']):
-                if pd.notna(row[col]):
+            # Property Details
+            property_text += "\nPROPERTY DETAILS:\n"
+            for col in ['site_class', 'site_name', 'address', 'neighborhood', 'property_type']:
+                if col in available_cols and pd.notna(row.get(col)):
                     property_text += f"  {col.replace('_', ' ').title()}: {row[col]}\n"
 
-        property_texts.append(property_text)
+            # Financial Info
+            property_text += "\nFINANCIAL INFORMATION:\n"
+            for col in available_cols:
+                if 'price' in col.lower() or 'amount' in col.lower():
+                    value = row.get(col)
+                    if pd.notna(value) and isinstance(value, (int, float)):
+                        property_text += f"  {col.replace('_', ' ').title()}: ${value:,.2f}\n"
 
-    combined_text = "\n".join(property_texts)
+            # Size Info
+            property_text += "\nSIZE INFORMATION:\n"
+            for col in available_cols:
+                if any(x in col.lower() for x in ['acre', 'size', 'sqft', 'square']):
+                    value = row.get(col)
+                    if pd.notna(value):
+                        property_text += f"  {col.replace('_', ' ').title()}: {value}\n"
 
-    print(f"✅ Created knowledge base with {len(property_texts)} properties")
-    print(f"   Total text length: {len(combined_text):,} characters")
+            property_texts.append(property_text)
 
-    return combined_text
+        combined_text = "\n".join(property_texts)
+
+        print(f"✅ Created knowledge base with {len(property_texts)} properties")
+        print(f"   Total text length: {len(combined_text):,} characters")
+
+        return combined_text
+
+    except Exception as e:
+        print(f"❌ Error creating knowledge base: {e}")
+        # Return a minimal knowledge base to prevent complete failure
+        return "Texas commercial real estate market data (2018-2025)"
 
 def create_sample_datasets():
     """

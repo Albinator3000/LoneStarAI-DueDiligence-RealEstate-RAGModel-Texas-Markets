@@ -10,10 +10,12 @@ LoneStar AI is a Streamlit app that provides 2-minute property analysis using RA
 
 - Property due diligence analysis in 2 minutes
 - AI-powered insights using Texas market data (1,193 properties, 2018-2025)
+- Market intelligence dashboard with interactive charts
 - Critical issue identification
 - Valuation assessment
 - Investment recommendations
-- Clean white, black, and burnt orange UI
+- Hybrid pricing calculator
+- Clean white, black, teal, and orange UI design
 
 ## Local Development
 
@@ -53,8 +55,10 @@ streamlit run app.py
 
 1. Make sure all files are committed to GitHub:
    - `app.py` (main application)
+   - `data_loader.py` (data loading module)
    - `requirements.txt` (dependencies)
    - `.streamlit/config.toml` (theme configuration)
+   - `data/` folder with Excel files (optional - will use sample data if missing)
    - `README.md` (project documentation)
 
 2. Push to GitHub:
@@ -237,9 +241,13 @@ For questions about this project:
 - GitHub Issues: Create an issue in your repo
 - OIDD 2550 Course Materials
 
+## Team
+
+Built by **Albert Opher**, **Josh Johnson**, **Shawn Gutierrez**, and **Matt Inamine**
+
 ## License
 
-This project was created for OIDD 2550 - Lab 5: LLM Pitch Project (Fall 2024)
+This project was created for OIDD 2550 - Lab 5: LLM Pitch Project (Fall 2025)
 
 ## Acknowledgments
 

@@ -29,16 +29,16 @@ st.set_page_config(
 # Custom CSS for LoneStar AI branding
 st.markdown("""
 <style>
-    /* Main color scheme: White background, Black text, Burnt Orange + Teal accents */
+    /* Main color scheme: White background, Black text, Teal + Orange accents */
 
     /* Headers */
     h1, h2, h3 {
         color: #000000;
     }
 
-    /* Primary buttons and accents */
+    /* Primary buttons - Teal */
     .stButton>button {
-        background-color: #BF5700;
+        background-color: #008B8B;
         color: white;
         border: none;
         border-radius: 5px;
@@ -47,57 +47,47 @@ st.markdown("""
     }
 
     .stButton>button:hover {
-        background-color: #008B8B;
+        background-color: #006666;
         color: white;
     }
 
-    /* Sidebar with teal accent */
+    /* Sidebar - Orange border */
     [data-testid="stSidebar"] {
-        background: linear-gradient(to bottom, #F5F5F5 0%, #E0F2F1 100%);
-        border-right: 3px solid #008B8B;
+        background-color: #F5F5F5;
+        border-right: 3px solid #BF5700;
     }
 
-    /* Info boxes */
+    /* Info boxes - Teal */
     .stAlert {
-        background-color: #FFF5E6;
-        border-left: 4px solid #BF5700;
+        background-color: #E0F2F1;
+        border-left: 4px solid #008B8B;
     }
 
-    /* Text inputs with teal focus */
+    /* Text inputs */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        border-color: #BF5700;
-    }
-
-    .stTextInput>div>div>input:focus, .stTextArea>div>div>textarea:focus {
         border-color: #008B8B;
-        box-shadow: 0 0 0 1px #008B8B;
     }
 
-    /* Links */
+    /* Links - Orange */
     a {
         color: #BF5700;
     }
 
     a:hover {
-        color: #008B8B;
+        color: #8B4000;
     }
 
-    /* Metrics - alternate teal for some */
+    /* Metrics - Orange */
     [data-testid="stMetricValue"] {
         color: #BF5700;
     }
 
-    /* Teal metric variant */
-    .metric-teal [data-testid="stMetricValue"] {
-        color: #008B8B !important;
-    }
-
-    /* Divider */
+    /* Divider - Orange */
     hr {
         border-color: #BF5700;
     }
 
-    /* Success message with teal */
+    /* Success message */
     .success-box {
         background-color: #E0F2F1;
         border-left: 4px solid #008B8B;
@@ -123,29 +113,6 @@ st.markdown("""
         border-radius: 5px;
         margin: 1rem 0;
     }
-
-    /* Info box variant with teal */
-    .info-box-teal {
-        background-color: #E0F2F1;
-        border-left: 4px solid #008B8B;
-        padding: 1rem;
-        border-radius: 5px;
-        margin: 1rem 0;
-    }
-
-    /* Tabs with teal accent */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 4px 4px 0 0;
-    }
-
-    .stTabs [aria-selected="true"] {
-        background-color: #E0F2F1;
-        border-bottom: 3px solid #008B8B;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -160,6 +127,8 @@ if 'texas_data' not in st.session_state:
     st.session_state.texas_data = None
 if 'texas_data_loaded' not in st.session_state:
     st.session_state.texas_data_loaded = False
+if 'current_api_key' not in st.session_state:
+    st.session_state.current_api_key = None
 
 # Load Texas market data
 @st.cache_data
@@ -289,12 +258,17 @@ Answer:
 
 # Header
 st.markdown("<h1 style='color: #000000;'>LoneStar AI</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='background: linear-gradient(90deg, #BF5700 0%, #008B8B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;'>AI-Powered Property Due Diligence for Texas</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='color: #BF5700;'>AI-Powered Property Due Diligence for Texas</h3>", unsafe_allow_html=True)
 st.markdown("---")
 
 # Sidebar
 with st.sidebar:
-    st.markdown("### Configuration")
+    # Configuration section with orange tint
+    st.markdown("""
+    <div style='background: linear-gradient(to bottom, #FFF5E6 0%, #FFE8CC 100%); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;'>
+        <h3 style='margin-top: 0; color: #000000;'>Configuration</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
     api_key = st.text_input(
         "Groq API Key",
@@ -303,16 +277,20 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.markdown("### About LoneStar AI")
+
+    # About section with orange tint
     st.markdown("""
-    LoneStar AI analyzes Texas commercial real estate properties in **2 minutes** using:
-
-    - 1,193 Texas property sales (2018-2025)
-    - AI-powered RAG analysis
-    - Real estate domain expertise
-
-    **95% faster, 90% cheaper** than traditional due diligence.
-    """)
+    <div style='background: linear-gradient(to bottom, #FFF5E6 0%, #FFE8CC 100%); padding: 1rem; border-radius: 10px;'>
+        <h3 style='margin-top: 0; color: #000000;'>About LoneStar AI</h3>
+        <p style='color: #333333;'>LoneStar AI analyzes Texas commercial real estate properties in <strong>2 minutes</strong> using:</p>
+        <ul style='color: #333333;'>
+            <li>1,193 Texas property sales (2018-2025)</li>
+            <li>AI-powered RAG analysis</li>
+            <li>Real estate domain expertise</li>
+        </ul>
+        <p style='color: #333333;'><strong>95% faster, 90% cheaper</strong> than traditional due diligence.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("### Quick Stats")
@@ -338,6 +316,13 @@ with tab1:
                 st.session_state.texas_data_loaded = True
                 if st.session_state.texas_data is not None:
                     st.success(f"Loaded {len(st.session_state.texas_data)} Texas properties from {num_datasets} datasets")
+
+        # Check if API key has changed
+        if st.session_state.current_api_key != api_key:
+            # Reset vectorstore and qa_chain if API key changed
+            st.session_state.vectorstore = None
+            st.session_state.qa_chain = None
+            st.session_state.current_api_key = api_key
 
         # Initialize system
         if st.session_state.vectorstore is None:
@@ -370,6 +355,9 @@ with tab1:
                     st.success("LoneStar AI initialized with Texas market intelligence!")
                 except Exception as e:
                     st.error(f"Error initializing system: {str(e)}")
+                    # Provide helpful message for invalid API key
+                    if "invalid_api_key" in str(e).lower() or "401" in str(e):
+                        st.info("💡 Please make sure you're using a valid Groq API key. Get one free at https://console.groq.com")
 
         # Property details input
         st.markdown("#### Property Details")
@@ -473,7 +461,7 @@ Inspection Report:
                                 y='Cap Rate (%)',
                                 title="Your Property vs Texas Market Cap Rates",
                                 color='Cap Rate (%)',
-                                color_continuous_scale=['#8B4000', '#BF5700', '#FF8C00'],
+                                color_continuous_scale=['#008B8B', '#20B2AA', '#40E0D0'],
                                 text='Cap Rate (%)'
                             )
                             fig_cap.update_traces(texttemplate='%{text:.2f}%', textposition='outside')
@@ -586,7 +574,7 @@ with tab2:
                 y=type_counts.values,
                 labels={'x': 'Property Type', 'y': 'Count'},
                 title="Top 10 Property Types in Texas Dataset",
-                color_discrete_sequence=['#BF5700']
+                color_discrete_sequence=['#008B8B']
             )
             fig.update_layout(xaxis_tickangle=-45)
             st.plotly_chart(fig, use_container_width=True)
@@ -608,14 +596,14 @@ with tab2:
                     y=yearly_avg['mean'],
                     mode='lines+markers',
                     name='Average Price',
-                    line=dict(color='#BF5700', width=3)
+                    line=dict(color='#20B2AA', width=3)
                 ))
                 fig.add_trace(go.Scatter(
                     x=yearly_avg['year'],
                     y=yearly_avg['median'],
                     mode='lines+markers',
                     name='Median Price',
-                    line=dict(color='#8B4000', width=2, dash='dash')
+                    line=dict(color='#40E0D0', width=2, dash='dash')
                 ))
 
                 fig.update_layout(
@@ -633,7 +621,7 @@ with tab2:
                     y='count',
                     title="Number of Transactions by Year",
                     labels={'count': 'Number of Sales', 'year': 'Year'},
-                    color_discrete_sequence=['#BF5700']
+                    color_discrete_sequence=['#008B8B']
                 )
                 st.plotly_chart(fig2, use_container_width=True)
 
@@ -649,7 +637,7 @@ with tab2:
                     nbins=50,
                     title="Distribution of Sale Prices",
                     labels={'value': 'Sale Price ($)', 'count': 'Frequency'},
-                    color_discrete_sequence=['#BF5700']
+                    color_discrete_sequence=['#008B8B']
                 )
                 st.plotly_chart(fig, use_container_width=True)
 
@@ -701,7 +689,7 @@ with tab3:
                 </ul>
             </div>
             <div>
-                <h4 style='color: #28a745;'>Usage Overage: $0.0005/token</h4>
+                <h4 style='color: #BF5700;'>Usage Overage: $0.0005/token</h4>
                 <ul style='color: #333333;'>
                     <li><strong>Only charged beyond 100K tokens</strong></li>
                     <li>Pay only for what you actually use</li>
@@ -764,7 +752,7 @@ with tab3:
         name='Base Fee ($1,000)',
         x=pricing_data['Properties Analyzed'],
         y=pricing_data['Base Fee'],
-        marker_color='#BF5700',
+        marker_color='#20B2AA',
         text=pricing_data['Base Fee'],
         texttemplate='$%{text:,.0f}',
         textposition='inside'
@@ -773,7 +761,7 @@ with tab3:
         name='Usage Overage',
         x=pricing_data['Properties Analyzed'],
         y=pricing_data['Overage Fee'],
-        marker_color='#28a745',
+        marker_color='#40E0D0',
         text=pricing_data['Overage Fee'],
         texttemplate='$%{text:,.0f}',
         textposition='outside'
